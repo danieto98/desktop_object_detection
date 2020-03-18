@@ -1,6 +1,6 @@
-# class: object identified
+# className: object identified
 # type: Static or Dynamic
 # distance: in cm, distance from camera to object
-string class
+string className
 string type
 uint32 distance
