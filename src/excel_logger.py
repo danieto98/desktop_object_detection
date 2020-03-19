@@ -11,7 +11,7 @@ class ExcelLogger:
 		self.ws.title = "Data Dump"
 		self.nr = 1
 		self.ws.append(["Object No.", "Object Class", "Static/Dynamic", "Distance (from Camera)"])
-	def callback(data):
+	def callback(self, data):
 		str = "Object %d" % (self.nr)
 		self.ws.append([str, data.className, data.type, data.distance])
 		self.nr = self.nr + 1
