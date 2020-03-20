@@ -48,8 +48,6 @@ if __name__ == '__main__':
 	# Initialize ROS node
 	rospy.init_node("excel_logger", anonymous=True, disable_signals=True)
 
-	rospy.loginfo(len(sys.argv))
-
 	# Get filename from argv
 	filename = ""
 	if len(sys.argv) == 4:
