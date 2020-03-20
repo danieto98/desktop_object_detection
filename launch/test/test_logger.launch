@@ -1,0 +1,6 @@
+<launch>
+    <arg name="log_filepath" default="~/output.xlsx" />
+    
+    <node pkg="desktop_object_detection" type="result_message_stream.py" name="result_message_stream" />
+    <node pkg="desktop_object_detection" type="excel_logger.py" name="excel_logger" args="$(arg log_filepath)"/>
+</launch>
