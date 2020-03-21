@@ -19,7 +19,8 @@ child_dirs = next(os.walk(directory))[1]
 for child_dir in child_dirs:
     # Iterate over all images in the given directory
     for filename in os.listdir(directory + "/" + child_dir):
-        if filename.endswith(".jpg"):
+        # If file is a jpg or png image
+        if filename.endswith(".jpg") or filename.endswith(".png"):
             # Get image from filename
             original = cv2.imread(directory + "/" + child_dir + "/" + filename, cv2.IMREAD_COLOR)
 
@@ -63,7 +64,8 @@ for child_dir in child_dirs:
                 contours_poly[i] = cv2.approxPolyDP(c, 3, True)
                 boundRect[i] = cv2.boundingRect(contours_poly[i])
 
-            # Expand rectangles to a square, enlarge it and draw
+            # Expand rectangles to squares, enlarge them and pick the one closest to the center
+            # that is at least 300x300 pixels
             pix_val = 75
             first = True
             real_center = [int(original.shape[1]/2.0), int(original.shape[0]/2.0)]
@@ -97,7 +99,7 @@ for child_dir in child_dirs:
                             corn_1 = corner_1
                             corn_2 = result_corner_2
 
-            # Crop image, scale down and save to new directory
+            # Crop image to selected square, scale down to 220x220 and save to second directory
             crop = original[corn_1[1]:corn_2[1], corn_1[0]:corn_2[0]]
             if crop.shape[0] == crop.shape[1] and crop.shape[0] > 0 and crop.shape[1] > 0:
                 scaled = cv2.resize(crop, (220, 220), interpolation = cv2.INTER_AREA)
