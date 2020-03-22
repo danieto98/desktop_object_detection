@@ -41,7 +41,7 @@ class ImageSegmenter:
         # Apply distance transform to find foreground
         dist_transform = cv2.distanceTransform(opening,cv2.DIST_L2,5)
         dist_transform = cv2.convertScaleAbs(dist_transform)
-        ret, sure_fg = cv2.threshold(dist_transform,0.7*dist_transform.max(),255,0)
+        ret, sure_fg = cv2.threshold(dist_transform,0.4*dist_transform.max(),255,0)
         
         # Find unknown region
         sure_fg = np.uint8(sure_fg)
@@ -65,11 +65,6 @@ class ImageSegmenter:
             contours_poly[i] = cv2.approxPolyDP(c, 3, True)
             boundRect[i] = cv2.boundingRect(contours_poly[i])
 
-        # Put bounding rectangle pixel coordinates in output
-        output_msg.bounding_rectangle_coords = []
-        for i in range(len(contours)):
-            output_msg.bounding_rectangle_coords = output_msg.bounding_rectangle_coords + [int(boundRect[i][0]), int(boundRect[i][1]), int(boundRect[i][0]+boundRect[i][2]), int(boundRect[i][1]+boundRect[i][3])]
-
         # Get depth image
         cv_depth_image = self.bridge.imgmsg_to_cv2(data.depth, desired_encoding="passthrough")
         cv_depth_image.astype("float32")
@@ -90,25 +85,42 @@ class ImageSegmenter:
                 y = z * ((j - cy) * fy_inv)
                 dist[i, j] = sqrt(x*x + y*y + z*z)
 
-        # For each contour, get its closest distance and contour image. Put them in output message
+        # For each contour, get its closest distance, contour image and bounding square. Put them in output message
+        pix_val = 75
         output_msg.segmentation_contours = []
         output_msg.distances = []
+        output_msg.bounding_rectangle_coords = []
         for c in range(len(contours)):
-            contour_image = np.zeros((cv_rgb_image.shape[0], cv_rgb_image.shape[1]), np.uint8)
-            cv2.drawContours(contour_image, contours, c, [255], thickness=cv2.FILLED)
-            img_msg = self.bridge.cv2_to_imgmsg(contour_image, encoding="passthrough")
-            output_msg.segmentation_contours = output_msg.segmentation_contours + [img_msg]
-            first = True
-            mindist = 0
-            for i in range(cv_depth_image.shape[0]):
-                for j in range(cv_depth_image.shape[1]):
-                    if contour_image[i, j] == 255:
-                        if first:
-                            mindist = dist[i, j]
-                            first = False
-                        elif dist[i, j] < mindist:
-                            mindist = dist[i, j]
-            output_msg.distances = output_msg.distances + [int(mindist)]
+            corner_1 = [int(boundRect[c][0]), int(boundRect[c][1])]
+            corner_3 = [int(boundRect[c][0]+boundRect[c][2]), int(boundRect[c][1]+boundRect[c][3])]
+            if corner_1[0] != 0 or corner_1[1] != 0 or corner_3[0] != cv_rgb_image.shape[1] or corner_3[1] != cv_rgb_image.shape[0]:
+                corner_2 = [int(boundRect[c][0]), int(boundRect[c][1]+boundRect[c][3])]
+                corner_4 = [int(boundRect[c][0]+boundRect[c][2]), int(boundRect[c][1])]
+                side_1_size = math.sqrt(float(corner_1[1] - corner_2[1])*float(corner_1[1] - corner_2[1]) + float(corner_1[0] - corner_2[0])*float(corner_1[0] - corner_2[0]))
+                side_2_size = math.sqrt(float(corner_3[1] - corner_2[1])*float(corner_3[1] - corner_2[1]) + float(corner_3[0] - corner_2[0])*float(corner_3[0] - corner_2[0]))
+                result_corner_2 = [0, 0]
+                corner_1 = [corner_1[0] - pix_val, corner_1[1] - pix_val]
+                if side_1_size > side_2_size:
+                    result_corner_2 = [int(boundRect[i][0]+boundRect[i][3]+pix_val),int(boundRect[i][1]+boundRect[i][3]+pix_val)]
+                else:
+                    result_corner_2 = [int(boundRect[i][0]+boundRect[i][2]+pix_val), int(boundRect[i][1]+boundRect[i][2]+pix_val)]
+                if result_corner_2[0] - corner_1[0] > 350 :
+                    output_msg.bounding_rectangle_coords = output_msg.bounding_rectangle_coords + corner_1 + result_corner_2
+                    contour_image = np.zeros((cv_rgb_image.shape[0], cv_rgb_image.shape[1]), np.uint8)
+                    cv2.drawContours(contour_image, contours, c, [255], thickness=cv2.FILLED)
+                    img_msg = self.bridge.cv2_to_imgmsg(contour_image, encoding="passthrough")
+                    output_msg.segmentation_contours = output_msg.segmentation_contours + [img_msg]
+                    first = True
+                    mindist = 0
+                    for i in range(cv_depth_image.shape[0]):
+                        for j in range(cv_depth_image.shape[1]):
+                            if contour_image[i, j] == 255:
+                                if first:
+                                    mindist = dist[i, j]
+                                    first = False
+                                elif dist[i, j] < mindist:
+                                    mindist = dist[i, j]
+                    output_msg.distances = output_msg.distances + [int(mindist)]
 
         # Publish output message
         self.publisher.publish(output_msg)
