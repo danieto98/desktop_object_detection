@@ -30,11 +30,8 @@ for child_dir in child_dirs:
             # Get horizontally flipped image
             hflipped = cv2.flip(original, flipCode=0)
 
-            # Get rotated images by 30, 45, 60 and 90 degrees
+            # Get rotated images by 30 degrees
             rot30 = transform.rotate(orig_scikit, angle=30)
-            rot45 = transform.rotate(orig_scikit, angle=45)
-            rot60 = transform.rotate(orig_scikit, angle=60)
-            rot90 = transform.rotate(orig_scikit, angle=90)
 
             # Add noise
             noisy = util.random_noise(orig_scikit)
@@ -47,8 +44,5 @@ for child_dir in child_dirs:
             cv2.imwrite(os.path.splitext(result_dir + "/" + child_dir + "/" + filename)[0] + "_vflipped.jpg", vflipped)
             cv2.imwrite(os.path.splitext(result_dir + "/" + child_dir + "/" + filename)[0] + "_hflipped.jpg", hflipped)
             cv2.imwrite(os.path.splitext(result_dir + "/" + child_dir + "/" + filename)[0] + "_rot30.jpg", util.img_as_ubyte(rot30))
-            cv2.imwrite(os.path.splitext(result_dir + "/" + child_dir + "/" + filename)[0] + "_rot30.jpg", util.img_as_ubyte(rot45))
-            cv2.imwrite(os.path.splitext(result_dir + "/" + child_dir + "/" + filename)[0] + "_rot30.jpg", util.img_as_ubyte(rot60))
-            cv2.imwrite(os.path.splitext(result_dir + "/" + child_dir + "/" + filename)[0] + "_rot30.jpg", util.img_as_ubyte(rot90))
             cv2.imwrite(os.path.splitext(result_dir + "/" + child_dir + "/" + filename)[0] + "_noisy.jpg", util.img_as_ubyte(noisy))
             cv2.imwrite(os.path.splitext(result_dir + "/" + child_dir + "/" + filename)[0] + "_blurry.jpg", util.img_as_ubyte(blurry))

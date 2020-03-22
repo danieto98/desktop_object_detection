@@ -65,7 +65,7 @@ for child_dir in child_dirs:
                 boundRect[i] = cv2.boundingRect(contours_poly[i])
 
             # Expand rectangles to squares, enlarge them and pick the one closest to the center
-            # that is at least 300x300 pixels
+            # that is at least 350x350 pixels
             pix_val = 75
             first = True
             real_center = [int(original.shape[1]/2.0), int(original.shape[0]/2.0)]
@@ -86,7 +86,7 @@ for child_dir in child_dirs:
                         result_corner_2 = [int(boundRect[i][0]+boundRect[i][3]+pix_val),int(boundRect[i][1]+boundRect[i][3]+pix_val)]
                     else:
                         result_corner_2 = [int(boundRect[i][0]+boundRect[i][2]+pix_val), int(boundRect[i][1]+boundRect[i][2]+pix_val)]
-                    if result_corner_2[0] - corner_1[0] > 300 :
+                    if result_corner_2[0] - corner_1[0] > 350 :
                         center = [float(corner_1[0]+corner_2[0])/2.0, float(corner_1[1]+corner_2[1])/2.0]
                         distance_to_center = math.sqrt(float(center[0] - real_center[0])*float(center[0] - real_center[0]) + float(center[1] - real_center[1])*float(center[1] - real_center[1]))
                         if first:
