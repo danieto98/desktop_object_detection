@@ -20,4 +20,7 @@
     
     <!--Start image segmentation node-->
     <node pkg="desktop_object_detection" type="image_segmentation.py" name="image_segmentation" />
+    
+    <!--Start Excel logger node-->
+    <node pkg="desktop_object_detection" type="excel_logger.py" name="excel_logger" />
 </launch>
