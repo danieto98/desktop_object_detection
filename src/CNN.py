@@ -6,6 +6,7 @@ from desktop_object_detection.msg import Results
 import tensorflow as tf
 import cv2
 import numpy as np
+import sys
 
 # Recognizer class
 class Recognizer:
@@ -20,10 +21,9 @@ class Recognizer:
 		
 		# Previously recorded results
 		self.prevRecs = [[],[],[]]
-	def callback(data):
+	def callback(self, data):
 		# Get original RGB image from data
 		original_image = self.bridge.imgmsg_to_cv2(data.original_image, desired_encoding="passthrough")
-		original_image.setflags(write=1)
 
 		# Get the number of recognized contours
 		contour_nr = len(data.distances)
@@ -75,11 +75,11 @@ if __name__ == '__main__':
 		exit(1)
 
 	# Advertise publisher
-    pub = rospy.Publisher("results", Results, queue_size = 10)
+	pub = rospy.Publisher("results", Results, queue_size = 10)
 
 	# Initialize Recognizer
 	recog = Recognizer(model_path, pub)
 
 	# Attach Recognizer callback to segmentation_and_distance
-    rospy.Subscriber("segmentation_and_distance", SegAndDist, recog.callback)
-    rospy.spin()
+	rospy.Subscriber("segmentation_and_distance", SegAndDist, recog.callback)
+	rospy.spin()

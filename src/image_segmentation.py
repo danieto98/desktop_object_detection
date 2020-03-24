@@ -19,7 +19,6 @@ class ImageSegmenter:
     def callback(self, data):
         # Get RGB image from data
         cv_rgb_image = self.bridge.imgmsg_to_cv2(data.rgb, desired_encoding="passthrough")
-        cv_rgb_image.setflags(write=1)
 
         # Initialize output message
         output_msg = SegAndDist()
@@ -95,15 +94,15 @@ class ImageSegmenter:
             if corner_1[0] != 0 or corner_1[1] != 0 or corner_3[0] != cv_rgb_image.shape[1] or corner_3[1] != cv_rgb_image.shape[0]:
                 corner_2 = [int(boundRect[c][0]), int(boundRect[c][1]+boundRect[c][3])]
                 corner_4 = [int(boundRect[c][0]+boundRect[c][2]), int(boundRect[c][1])]
-                side_1_size = math.sqrt(float(corner_1[1] - corner_2[1])*float(corner_1[1] - corner_2[1]) + float(corner_1[0] - corner_2[0])*float(corner_1[0] - corner_2[0]))
-                side_2_size = math.sqrt(float(corner_3[1] - corner_2[1])*float(corner_3[1] - corner_2[1]) + float(corner_3[0] - corner_2[0])*float(corner_3[0] - corner_2[0]))
+                side_1_size = sqrt(float(corner_1[1] - corner_2[1])*float(corner_1[1] - corner_2[1]) + float(corner_1[0] - corner_2[0])*float(corner_1[0] - corner_2[0]))
+                side_2_size = sqrt(float(corner_3[1] - corner_2[1])*float(corner_3[1] - corner_2[1]) + float(corner_3[0] - corner_2[0])*float(corner_3[0] - corner_2[0]))
                 result_corner_2 = [0, 0]
                 corner_1 = [corner_1[0] - pix_val, corner_1[1] - pix_val]
                 if side_1_size > side_2_size:
-                    result_corner_2 = [int(boundRect[i][0]+boundRect[i][3]+pix_val),int(boundRect[i][1]+boundRect[i][3]+pix_val)]
+                    result_corner_2 = [int(boundRect[c][0]+boundRect[c][3]+pix_val),int(boundRect[c][1]+boundRect[c][3]+pix_val)]
                 else:
-                    result_corner_2 = [int(boundRect[i][0]+boundRect[i][2]+pix_val), int(boundRect[i][1]+boundRect[i][2]+pix_val)]
-                if result_corner_2[0] - corner_1[0] > 350 :
+                    result_corner_2 = [int(boundRect[c][0]+boundRect[c][2]+pix_val), int(boundRect[c][1]+boundRect[c][2]+pix_val)]
+                if result_corner_2[0] - corner_1[0] > 350 and corner_1[0] > 0 and corner_1[1] > 0 and result_corner_2[0] > 0 and result_corner_2[1] > 0:
                     output_msg.bounding_rectangle_coords = output_msg.bounding_rectangle_coords + corner_1 + result_corner_2
                     contour_image = np.zeros((cv_rgb_image.shape[0], cv_rgb_image.shape[1]), np.uint8)
                     cv2.drawContours(contour_image, contours, c, [255], thickness=cv2.FILLED)
