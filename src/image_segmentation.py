@@ -85,9 +85,8 @@ class ImageSegmenter:
                 y = z * ((j - cy) * fy_inv)
                 dist[i, j] = sqrt(x*x + y*y + z*z)
 
-        # For each contour, get its closest distance, contour image and bounding square. Put them in output message
+        # For each contour, get its closest distance and bounding square. Put them in output message
         pix_val = 75
-        output_msg.segmentation_contours = []
         output_msg.distances = []
         output_msg.bounding_rectangle_coords = []
         for c in range(len(contours)):
@@ -108,8 +107,6 @@ class ImageSegmenter:
                     output_msg.bounding_rectangle_coords = output_msg.bounding_rectangle_coords + corner_1 + result_corner_2
                     contour_image = np.zeros((cv_rgb_image.shape[0], cv_rgb_image.shape[1]), np.uint8)
                     cv2.drawContours(contour_image, contours, c, [255], thickness=cv2.FILLED)
-                    img_msg = self.bridge.cv2_to_imgmsg(contour_image, encoding="passthrough")
-                    output_msg.segmentation_contours = output_msg.segmentation_contours + [img_msg]
                     first = True
                     mindist = 0
                     for i in range(cv_depth_image.shape[0]):
