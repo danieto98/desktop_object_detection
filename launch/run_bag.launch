@@ -3,7 +3,10 @@
     <arg name="log_filepath" default="~/output.xlsx" />
 
     <!--Path to bag file with Kinect data-->
-    <arg name="filename" default="" />
+    <arg name="filename" />
+    
+    <!--Path to CNN model-->
+    <arg name="model_path" />
     
     <!--Run bag file with simulation time enabled-->
     <param name="use_sim_time" value="true"/>
@@ -26,4 +29,7 @@
     
     <!--Start Excel logger node-->
     <node pkg="desktop_object_detection" type="excel_logger.py" name="excel_logger" args="$(arg log_filepath) />
+    
+    <!--Start CNN node for object recognition-->
+    <node pkg="desktop_object_detection" type="CNN.py" name="CNN" args="$(arg model_path)" />
 </launch>
