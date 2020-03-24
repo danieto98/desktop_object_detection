@@ -102,3 +102,35 @@ Make all the ROS Python files in the repository executable:
 find src/desktop_object_detection/src -type f -exec chmod +x {} \;
 chmod +x src/desktop_object_detection/test/result_message_stream.py
 ```
+
+## Usage
+
+### Record Kinect Data
+
+Connect the Kinect sensor by USB to the PC running ROS. Use the following command to test whether the device is recognized:
+
+```
+lsusb | grep Xbox
+```
+
+You should see three devices there (Xbox NUI Camera, Xbox NUI Motor, Xbox NUI Audio). Once you have seen them, open a terminal in the root of your catkin workspace and run:
+
+```
+source devel/setup.bash
+```
+
+Run the following command by replacing `<prefix>` with your desired prefix for the bag file that will be saved as `absolute_path/name` (e.g. `/home/user/bag1` where `bag1` is not a folder):
+
+```
+roslaunch desktop_object_detection record_bag.launch bag_prefix:=<prefix>
+```
+
+### Play Bag and Run
+
+Download and extract the files for the trained model of the Convolutional Neural Network (CNN) from [here](https://drive.google.com/open?id=1qTyxK5KTIbe78FmeytKQ558AqHhI5Mem).
+
+To run all the nodes while playing back the bag file saved using the previous procedure, use the following command by replacing `<log_path>` with the absolute path of the Excel log file that will be created (use a .xlsx extension), `<bag_filename>` with the absolute path to the recorded bag file, and `<model_dir>` with the absolute path to the directory of the CNN:
+
+```
+roslaunch desktop_object_detection run_bag.launch log_filepath:=<log_path> filename:=<bag_filename> model_path:=<model_dir>
+```
