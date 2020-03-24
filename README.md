@@ -125,6 +125,8 @@ Run the following command by replacing `<prefix>` with your desired prefix for t
 roslaunch desktop_object_detection record_bag.launch bag_prefix:=<prefix>
 ```
 
+Kill at any desired moment all the processes to save the bag file by inputting `Ctrl+C` in the terminal that is running them.
+
 ### Play Bag and Run
 
 Download and extract the files for the trained model of the Convolutional Neural Network (CNN) from [here](https://drive.google.com/open?id=1qTyxK5KTIbe78FmeytKQ558AqHhI5Mem).
