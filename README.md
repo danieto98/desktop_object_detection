@@ -46,7 +46,7 @@ Now make and install the library:
 ```
 mkdir build
 cd build
-cmake -L
+cmake -L ..
 make
 sudo make install
 ```
