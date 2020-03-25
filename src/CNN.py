@@ -7,6 +7,7 @@ import tensorflow as tf
 import cv2
 import numpy as np
 import sys
+from tensorflow.keras.preprocessing import image
 
 # Recognizer class
 class Recognizer:
@@ -17,7 +18,7 @@ class Recognizer:
 		self.probability_model = tf.keras.Sequential([self.model, tf.keras.layers.Softmax()])
 		
 		# List of class names
-		self.CLASSES = ["Apple", "Scientific Calculator", "Computer Mouse"]
+		self.CLASSES = ["Scientific Calculator", "Apple", "Computer Mouse"]
 		
 		# Previously recorded results
 		self.prevRecs = [[],[],[]]
@@ -41,20 +42,26 @@ class Recognizer:
 				output.distance = data.distances[i]
 
 				# Convert scaled image to a format recognizable by tensorflow
-				np_image_data = np.asarray(scaled)
-				np_final = np.expand_dims(np_image_data, axis=0)
+				img = scaled[...,::-1].astype(np.float32) / 255.0
+
+				# Get image array
+				x = image.img_to_array(img)
+				x = np.expand_dims(x, axis=0)
 
 				# Get tensorflow result class and put into output message if confidence greater than 80%
-				predictions = self.probability_model.predict(np_final)
+				predictions = self.probability_model.predict(x)
 				idx = np.argmax(predictions[0])
-				if(predictions[0][idx]> 0.8):
+				if predictions[0][idx] > 0.8:
 					output.className = self.CLASSES[idx]
 					self.prevRecs[idx] = self.prevRecs[idx] + [output.distance]
 
 					# If this object had been recognized before in a position differing by at least epsilon, label it as dynamic
 					epsilon = 5
-					if len(self.prevRecs[idx]) > 1 and (self.prevRecs[idx][-2] + epsilon < self.prevRecs[idx][-1]) or (self.prevRecs[idx][-2] - epsilon > self.prevRecs[idx][-1]):
-						output.type = "Dynamic"
+					if len(self.prevRecs[idx]) > 1:
+						if (self.prevRecs[idx][-2] + epsilon < self.prevRecs[idx][-1]) or (self.prevRecs[idx][-2] - epsilon > self.prevRecs[idx][-1]):
+							output.type = "Dynamic"
+						else:
+							output.type = "Static"
 					else:
 						output.type = "Static"
 

@@ -66,7 +66,6 @@ class ImageSegmenter:
 
         # Get depth image
         cv_depth_image = self.bridge.imgmsg_to_cv2(data.depth, desired_encoding="passthrough")
-        cv_depth_image.astype("float32")
 
         # Get parameters from camera matrix
         camera_matrix = np.array(data.depthCameraInfo.K).reshape([3, 3])
@@ -79,7 +78,7 @@ class ImageSegmenter:
         dist = np.zeros((cv_depth_image.shape[0], cv_depth_image.shape[1]), np.uint8)
         for i in range(cv_depth_image.shape[0]):
             for j in range(cv_depth_image.shape[1]):
-                z = cv_depth_image[i, j]
+                z = cv_depth_image[i, j] / 10.0
                 x = z * ((i - cx) * fx_inv)
                 y = z * ((j - cy) * fy_inv)
                 dist[i, j] = sqrt(x*x + y*y + z*z)
@@ -114,7 +113,7 @@ class ImageSegmenter:
                                 if first:
                                     mindist = dist[i, j]
                                     first = False
-                                elif dist[i, j] < mindist:
+                                elif dist[i, j] != 0 and dist[i, j] < mindist:
                                     mindist = dist[i, j]
                     output_msg.distances = output_msg.distances + [int(mindist)]
 
