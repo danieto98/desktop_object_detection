@@ -33,11 +33,11 @@ model = models.Sequential([
 	layers.MaxPooling2D(),
 	layers.Flatten(),
 	layers.Dense(512, activation='relu'),
-	layers.Dense(3)
+	layers.Dense(3, activation='sigmoid')
 ])
 
 # Compile the model
-model.compile(optimizer='adam', loss=tf.keras.losses.BinaryCrossentropy(from_logits=True), metrics=['accuracy'])
+model.compile(optimizer='rmsprop', loss='categorical_crossentropy', metrics=['accuracy'])
 
 # Train the model
 history = model.fit(train_generator, steps_per_epoch = train_generator.samples // BATCH_SIZE, epochs = EPOCHS)

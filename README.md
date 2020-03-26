@@ -1,7 +1,9 @@
 # desktop_object_detection
+
 Object detection and situation awareness ROS package using Kinect data for 3 common desktop objects
 
 ## System Architecture
+
 This is a UML diagram of the overall system architecture:
 
 <p align="center">
@@ -18,7 +20,7 @@ You must have a working ROS installation. Make sure you install the full desktop
 
 #### rtabmap_ros
 
-This is a ROS wrapper for the rtabmap library used to synchronize the Kinect messages. Install it using the following command, replacing `<distro` with your ROS installtion (kinetic or melodic):
+This is a ROS wrapper for the rtabmap library used to synchronize the Kinect messages. Install it using the following command, replacing `<distro>` with your ROS installation (kinetic or melodic):
 
 ```
 sudo apt-get install ros-<distro>rtabmap ros-<distro>-rtabmap-ros

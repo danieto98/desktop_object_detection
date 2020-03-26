@@ -14,8 +14,9 @@ class Recognizer:
 	def __init__(self, model_path, publisher):
 		self.publisher = publisher
 		self.model = tf.keras.models.load_model(model_path)
+		self.model.add(tf.keras.layers.Softmax())
+		self.model.compile(optimizer='rmsprop', loss='categorical_crossentropy', metrics=['accuracy'])
 		self.bridge = CvBridge()
-		self.probability_model = tf.keras.Sequential([self.model, tf.keras.layers.Softmax()])
 		
 		# List of class names
 		self.CLASSES = ["Scientific Calculator", "Apple", "Computer Mouse"]
@@ -49,9 +50,9 @@ class Recognizer:
 				x = np.expand_dims(x, axis=0)
 
 				# Get tensorflow result class and put into output message if confidence greater than 80%
-				predictions = self.probability_model.predict(x)
+				predictions = self.model.predict(x)
 				idx = np.argmax(predictions[0])
-				if predictions[0][idx] > 0.8:
+				if predictions[0][idx] > 0.4:
 					output.className = self.CLASSES[idx]
 					self.prevRecs[idx] = self.prevRecs[idx] + [output.distance]
 
