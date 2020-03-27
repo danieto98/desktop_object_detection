@@ -23,7 +23,7 @@ You must have a working ROS installation. Make sure you install the full desktop
 This is a ROS wrapper for the rtabmap library used to synchronize the Kinect messages. Install it using the following command, replacing `<distro>` with your ROS installation (kinetic or melodic):
 
 ```
-sudo apt-get install ros-<distro>rtabmap ros-<distro>-rtabmap-ros
+sudo apt-get install ros-<distro>-rtabmap ros-<distro>-rtabmap-ros
 ```
 
 #### libfreenect
