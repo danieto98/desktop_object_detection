@@ -40,7 +40,7 @@ cd libfreenect
 Before installing the source, modify the CMakeLists.txt file in the repository's root directory by adding the following line:
 
 ```
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11)
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 ```
 
 Now make and install the library:
