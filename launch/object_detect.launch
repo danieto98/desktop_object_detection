@@ -1,0 +1,37 @@
+<launch>
+    <!--Path to resulting Excel log file-->
+    <arg name="log_filepath" default="~/output.xlsx" />
+    
+    <!--Device ID for connected Kinect-->
+    <arg name="device_id" default="#1" />
+    
+    <!--Path to CNN model-->
+    <arg name="model_path" />
+    
+    <!--Start the freenect_camera driver-->
+    <include file="$(find freenect_launch)/launch/freenect.launch" >
+        <arg name="depth_registration" value="true" />
+        <arg name="device_id" value="$(arg device_id)" />
+    </include>
+    
+    <!--Start synchronization nodelet-->
+    <node pkg="nodelet" type="nodelet" name="rgbd_sync" args="standalone rtabmap_ros/rgbd_sync" output="screen">
+        
+        <!--Remap input topics-->
+        <remap from="rgb/image" to="/camera/rgb/image_rect_color"/>
+        <remap from="depth/image" to="/camera/depth_registered/image_raw"/>
+        <remap from="rgb/camera_info" to="/camera/rgb/camera_info"/>
+        
+        <!--Set approximate synchronization-->
+        <param name="approx_sync" value="true"/>
+    </node>
+    
+    <!--Start image segmentation node-->
+    <node pkg="desktop_object_detection" type="image_segmentation.py" name="image_segmentation" />
+    
+    <!--Start Excel logger node-->
+    <node pkg="desktop_object_detection" type="excel_logger.py" name="excel_logger" args="$(arg log_filepath)" />
+    
+    <!--Start CNN node for object recognition-->
+    <node pkg="desktop_object_detection" type="CNN.py" name="CNN" args="$(arg model_path)" />
+</launch>

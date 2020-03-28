@@ -138,3 +138,13 @@ To run all the nodes while playing back the bag file saved using the previous pr
 ```
 roslaunch desktop_object_detection run_bag.launch log_filepath:=<log_path> filename:=<bag_filename> model_path:=<model_dir>
 ```
+
+### Run Project Live
+
+Download and extract the files for the trained model of the Convolutional Neural Network (CNN) from [here](https://drive.google.com/open?id=1Ruqc53FRV53kMj4XMkbf9ik6u8gZjcc7).
+
+To run all the nodes live (including the Kinect), use the following command by replacing `<log_path>` with the absolute path of the Excel log file that will be created (use a .xlsx extension) and `<model_dir>` with the absolute path to the directory of the CNN:
+
+```
+roslaunch desktop_object_detection object_detect.launch log_filepath:=<log_path> model_path:=<model_dir>
+```
