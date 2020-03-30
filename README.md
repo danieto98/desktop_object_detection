@@ -121,10 +121,10 @@ You should see three devices there (Xbox NUI Camera, Xbox NUI Motor, Xbox NUI Au
 source devel/setup.bash
 ```
 
-Run the following command by replacing `<prefix>` with your desired prefix for the bag file that will be saved as `absolute_path/name` (e.g. `/home/user/bag1` where `bag1` is not a folder):
+Run the following command by replacing `<prefix>` with your desired prefix for the bag file that will be saved as `absolute_path/name` (e.g. `/home/user/bag1` where `bag1` is not a folder) and `<using_v1>` with either `true` (if using the Kinect from Xbox 360) or `false` (if using the Kinect from Xbox One):
 
 ```
-roslaunch desktop_object_detection record_bag.launch bag_prefix:=<prefix>
+roslaunch desktop_object_detection record_bag.launch bag_prefix:=<prefix> kinect_v1:=<using_v1>
 ```
 
 Kill at any desired moment all the processes to save the bag file by inputting `Ctrl+C` in the terminal that is running them.
@@ -133,10 +133,10 @@ Kill at any desired moment all the processes to save the bag file by inputting `
 
 Download and extract the files for the trained model of the Convolutional Neural Network (CNN) from [here](https://drive.google.com/open?id=1Ruqc53FRV53kMj4XMkbf9ik6u8gZjcc7).
 
-To run all the nodes while playing back the bag file saved using the previous procedure, use the following command by replacing `<log_path>` with the absolute path of the Excel log file that will be created (use a .xlsx extension), `<bag_filename>` with the absolute path to the recorded bag file, `<model_dir>` with the absolute path to the directory of the CNN, and `<using_v1>` with either `true` (if using the Kinect from Xbox 360) or `false` (if using the Kinect from Xbox One):
+To run all the nodes while playing back the bag file saved using the previous procedure, use the following command by replacing `<log_path>` with the absolute path of the Excel log file that will be created (use a .xlsx extension), `<bag_filename>` with the absolute path to the recorded bag file, and `<model_dir>` with the absolute path to the directory of the CNN:
 
 ```
-roslaunch desktop_object_detection run_bag.launch log_filepath:=<log_path> filename:=<bag_filename> model_path:=<model_dir> kinect_v1:=<using_v1>
+roslaunch desktop_object_detection run_bag.launch log_filepath:=<log_path> filename:=<bag_filename> model_path:=<model_dir>
 ```
 
 ### Run Project Live
