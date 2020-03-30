@@ -193,6 +193,8 @@ roslaunch desktop_object_detection run_bag.launch log_filepath:=<log_path> filen
 
 Download and extract the files for the trained model of the Convolutional Neural Network (CNN) from [here](https://drive.google.com/open?id=1Ruqc53FRV53kMj4XMkbf9ik6u8gZjcc7).
 
+Follow the preliminary steps mentioned in the [recording section](#record-kinect-data) up to sourcing the catkin workspace.
+
 To run all the nodes live (including the Kinect), use the following command by replacing `<log_path>` with the absolute path of the Excel log file that will be created (use a .xlsx extension), `<model_dir>` with the absolute path to the directory of the CNN, and `<using_v1>` with either `true` (if using the Kinect from Xbox 360) or `false` (if using the Kinect from Xbox One):
 
 ```
