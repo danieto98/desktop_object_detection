@@ -28,7 +28,7 @@ sudo apt-get install ros-<distro>-rtabmap ros-<distro>-rtabmap-ros
 
 #### libfreenect
 
-This library provides drivers for the Microsoft Kinect.
+This library provides drivers for the Microsoft Kinect. Install it if you intend to use the Kinect sensor from the Xbox 360.
 
 You will first need to clone the libfreenect library from source. Open up a terminal in your desired directory and run:
 
@@ -51,6 +51,56 @@ cd build
 cmake -L ..
 make
 sudo make install
+```
+
+#### libfreenect2
+
+This library provides drivers for the Microsoft Kinect. Install it if you intend to use the Kinect sensor from the Xbox One.
+
+You will first need to clone the libfreenect2 library from source. Open up a terminal in your desired directory and run:
+
+```
+git clone https://github.com/OpenKinect/libfreenect2
+cd libfreenect2
+```
+
+Now make and install the library:
+
+```
+mkdir build
+cd build
+cmake .. -DCMAKE_INSTALL_PREFIX=$HOME/freenect2 -DENABLE_CXX11=ON
+make
+sudo make install
+```
+
+#### kinect2-ros
+
+If you are using the Kinect v2 (from Xbox One), you will need to install this library, which provides a ROS bridge for the drivers of the device. Installation instructions from the [official repository](https://github.com/ethz-asl/kinect2-ros) are here onwards provided.
+
+To install it, first add the backports PPA and the drivers PPA to your APT sources by issuing:
+
+```
+sudo add-apt-repository ppa:ethz-asl/backports
+sudo add-apt-repository ppa:ethz-asl/drivers
+```
+
+Add the project PPA to your APT sources by issuing:
+
+```
+sudo add-apt-repository ppa:ethz-asl/ros
+```
+
+To re-synchronize your package index files, run
+
+```
+sudo apt-get update
+```
+
+Install all project packages and their dependencies through the following command, replacing `<distro>` with your ROS installation (kinetic or melodic):
+
+```
+sudo apt-get install ros-<distro>-kinect2
 ```
 
 #### Python libraries
