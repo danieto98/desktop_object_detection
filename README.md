@@ -133,18 +133,18 @@ Kill at any desired moment all the processes to save the bag file by inputting `
 
 Download and extract the files for the trained model of the Convolutional Neural Network (CNN) from [here](https://drive.google.com/open?id=1Ruqc53FRV53kMj4XMkbf9ik6u8gZjcc7).
 
-To run all the nodes while playing back the bag file saved using the previous procedure, use the following command by replacing `<log_path>` with the absolute path of the Excel log file that will be created (use a .xlsx extension), `<bag_filename>` with the absolute path to the recorded bag file, and `<model_dir>` with the absolute path to the directory of the CNN:
+To run all the nodes while playing back the bag file saved using the previous procedure, use the following command by replacing `<log_path>` with the absolute path of the Excel log file that will be created (use a .xlsx extension), `<bag_filename>` with the absolute path to the recorded bag file, `<model_dir>` with the absolute path to the directory of the CNN, and `<using_v1>` with either `true` (if using the Kinect from Xbox 360) or `false` (if using the Kinect from Xbox One):
 
 ```
-roslaunch desktop_object_detection run_bag.launch log_filepath:=<log_path> filename:=<bag_filename> model_path:=<model_dir>
+roslaunch desktop_object_detection run_bag.launch log_filepath:=<log_path> filename:=<bag_filename> model_path:=<model_dir> kinect_v1:=<using_v1>
 ```
 
 ### Run Project Live
 
 Download and extract the files for the trained model of the Convolutional Neural Network (CNN) from [here](https://drive.google.com/open?id=1Ruqc53FRV53kMj4XMkbf9ik6u8gZjcc7).
 
-To run all the nodes live (including the Kinect), use the following command by replacing `<log_path>` with the absolute path of the Excel log file that will be created (use a .xlsx extension) and `<model_dir>` with the absolute path to the directory of the CNN:
+To run all the nodes live (including the Kinect), use the following command by replacing `<log_path>` with the absolute path of the Excel log file that will be created (use a .xlsx extension), `<model_dir>` with the absolute path to the directory of the CNN, and `<using_v1>` with either `true` (if using the Kinect from Xbox 360) or `false` (if using the Kinect from Xbox One):
 
 ```
-roslaunch desktop_object_detection object_detect.launch log_filepath:=<log_path> model_path:=<model_dir>
+roslaunch desktop_object_detection object_detect.launch log_filepath:=<log_path> model_path:=<model_dir> kinect_v1:=<using_v1>
 ```
