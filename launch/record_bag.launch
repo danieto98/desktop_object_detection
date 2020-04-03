@@ -23,7 +23,7 @@
     <group if="$(arg kinect_v2)" >
         <!--Start the kinect2_bridge-->
         <include file="$(find kinect2_bridge)/launch/kinect2_bridge.launch">
-            <arg name="base_name" value"camera" />
+            <arg name="base_name" value="camera" />
             <arg name="depth_method" value="cpu" />
             <arg name="reg_method" value="cpu" />
             <remap from="/camera/hd/image_color_rect" to="/camera/rgb/image_rect_color" />
