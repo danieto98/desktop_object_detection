@@ -26,12 +26,14 @@
             <arg name="base_name" value="camera" />
             <arg name="depth_method" value="cpu" />
             <arg name="reg_method" value="cpu" />
-            <remap from="/camera/hd/image_color_rect" to="/camera/rgb/image_rect_color" />
-            <remap from="/camera/hd/image_depth_rect" to="/camera/depth_registered/image_raw" />
-            <remap from="/camera/hd/camera_info" to="/camera/rgb/camera_info" />
         </include>
     </group>
 
     <!--Record a bag of the Kinect data-->
-    <node pkg="rosbag" type="record" name="rosbag_record_kinect" args="record -o $(arg bag_prefix) /camera/rgb/camera_info /camera/rgb/image_rect_color /camera/depth_registered/image_raw" />
+    <group if="$(arg kinect_v1)" >
+        <node pkg="rosbag" type="record" name="rosbag_record_kinect" args="record -o $(arg bag_prefix) /camera/rgb/camera_info /camera/rgb/image_rect_color /camera/depth_registered/image_raw" />
+    </group>
+    <group if="$(arg kinect_v2)" >
+        <node pkg="rosbag" type="record" name="rosbag_record_kinect" args="record -o $(arg bag_prefix) /camera/hd/image_color_rect /camera/hd/image_depth_rect /camera/hd/camera_info" />
+    </group>
 </launch>
