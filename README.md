@@ -64,6 +64,16 @@ git clone https://github.com/OpenKinect/libfreenect2
 cd libfreenect2
 ```
 
+Install all dependencies. Up-to-date instructions in case something doesn't go right can be found [here](https://github.com/OpenKinect/libfreenect2). Use the following commands if you are using Ubuntu 16.04 (for other systems, follow the official instructions in the previous link):
+
+```
+sudo apt-get install build-essential cmake pkg-config
+sudo apt-get install libusb-1.0-0-dev
+sudo apt-get install libturbojpeg libjpeg-turbo8-dev
+sudo apt-get install libglfw3-dev
+sudo apt-get install libopenni2-dev
+```
+
 Now make and install the library:
 
 ```
@@ -71,36 +81,7 @@ mkdir build
 cd build
 cmake .. -DCMAKE_INSTALL_PREFIX=$HOME/freenect2 -DENABLE_CXX11=ON
 make
-sudo make install
-```
-
-#### kinect2-ros
-
-If you are using the Kinect v2 (from Xbox One), you will need to install this library, which provides a ROS bridge for the drivers of the device. Installation instructions from the [official repository](https://github.com/ethz-asl/kinect2-ros) are here onwards provided.
-
-To install it, first add the backports PPA and the drivers PPA to your APT sources by issuing:
-
-```
-sudo add-apt-repository ppa:ethz-asl/backports
-sudo add-apt-repository ppa:ethz-asl/drivers
-```
-
-Add the project PPA to your APT sources by issuing:
-
-```
-sudo add-apt-repository ppa:ethz-asl/ros
-```
-
-To re-synchronize your package index files, run
-
-```
-sudo apt-get update
-```
-
-Install all project packages and their dependencies through the following command, replacing `<distro>` with your ROS installation (kinetic or melodic):
-
-```
-sudo apt-get install ros-<distro>-kinect2
+make install
 ```
 
 #### Python libraries
@@ -127,11 +108,17 @@ catkin_make
 source devel/setup.bash
 ```
 
-Now, clone the freenect_stack repository:
+If using Kinect v1, clone the freenect_stack repository:
 
 ```
 cd src
 git clone https://github.com/ros-drivers/freenect_stack
+```
+
+If using Kinect v2, clone the iai-kinect2 repository:
+
+```
+git clone https://github.com/code-iai/iai_kinect2
 ```
 
 Clone this repository there too:
