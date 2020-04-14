@@ -13,6 +13,20 @@
     <arg if="$(arg kinect_v1)" name="kinect_v2" default="false" />
     <arg unless="$(arg kinect_v1)" name="kinect_v2" default="true" />
     
+    <!--Prediction percentage-->
+    <arg name="predict_percent" default="0.4" />
+    <param name="predict_percent" type="double" value="$(arg predict_percent)" />
+    
+    <!--Square size-->
+    <arg name="square_size" default="350" />
+    <param name="square_size" type="int" value="$(arg square_size)" />
+    
+    <!--Debugging (launch each node in its own terminal)-->
+    <arg name="debug" default="false" />
+    
+    <!--Run rviz visualization-->
+    <arg name="rviz" default="false" />
+    
     <!--If using Kinect from Xbox 360-->
     <group if="$(arg kinect_v1)" >
         <!--Start the freenect_camera driver-->
@@ -30,6 +44,14 @@
             <arg name="depth_method" value="cpu" />
             <arg name="reg_method" value="cpu" />
         </include>
+    </group>
+    
+    <!--Start CNN node for object recognition-->
+    <group if="$(arg debug)" >
+        <node pkg="desktop_object_detection" type="CNN.py" name="CNN" args="$(arg model_path)" output="screen" launch-prefix="xterm -e" />
+    </group>
+    <group unless="$(arg debug)" >
+        <node pkg="desktop_object_detection" type="CNN.py" name="CNN" args="$(arg model_path)" />
     </group>
     
     <!--Start synchronization nodelet-->
@@ -51,10 +73,20 @@
     </node>
     
     <!--Start image segmentation node-->
-    <node pkg="desktop_object_detection" type="image_segmentation.py" name="image_segmentation" />
+    <group if="$(arg debug)" >
+        <node pkg="desktop_object_detection" type="image_segmentation.py" name="image_segmentation" output="screen" launch-prefix="xterm -e" />
+    </group>
+    <group unless="$(arg debug)" >
+        <node pkg="desktop_object_detection" type="image_segmentation.py" name="image_segmentation" />
+    </group>
     
     <!--Start Excel logger node-->
     <node pkg="desktop_object_detection" type="excel_logger.py" name="excel_logger" args="$(arg log_filepath)" />
+    
+    <!--Start rviz-->
+    <group if="$(arg rviz)" >
+        <node pkg="rviz" type="rviz" name="rviz" args="-d $(find desktop_object_detection)/rviz/default.rviz" />
+    </group>
     
     <!--Start CNN node for object recognition-->
     <node pkg="desktop_object_detection" type="CNN.py" name="CNN" args="$(arg model_path)" />
