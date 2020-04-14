@@ -14,7 +14,7 @@ class ImageSegmenter:
     def __init__(self, publisher):
         self.bridge = CvBridge()
         self.publisher = publisher
-
+        self.square_size = rospy.get_param("/square_size", 350)
     # rgbd_image callback
     def callback(self, data):
         # Get RGB image from data
@@ -101,7 +101,8 @@ class ImageSegmenter:
                     result_corner_2 = [int(boundRect[c][0]+boundRect[c][3]+pix_val),int(boundRect[c][1]+boundRect[c][3]+pix_val)]
                 else:
                     result_corner_2 = [int(boundRect[c][0]+boundRect[c][2]+pix_val), int(boundRect[c][1]+boundRect[c][2]+pix_val)]
-                if result_corner_2[0] - corner_1[0] > 350 and corner_1[0] > 0 and corner_1[1] > 0 and result_corner_2[0] > 0 and result_corner_2[1] > 0:
+                if result_corner_2[0] - corner_1[0] > self.square_size and corner_1[0] > 0 and corner_1[1] > 0 and result_corner_2[0] > 0 and result_corner_2[1] > 0:
+                	print("Here")
                     output_msg.bounding_rectangle_coords = output_msg.bounding_rectangle_coords + corner_1 + result_corner_2
                     contour_image = np.zeros((cv_rgb_image.shape[0], cv_rgb_image.shape[1]), np.uint8)
                     cv2.drawContours(contour_image, contours, c, [255], thickness=cv2.FILLED)

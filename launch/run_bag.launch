@@ -15,14 +15,31 @@
     
     <!--Prediction percentage-->
     <arg name="predict_percent" default="0.4" />
+    <param name="predict_percent" type="double" value="$(arg predict_percent)" />
+    
+    <!--Square size-->
+    <arg name="square_size" default="350" />
+    <param name="square_size" type="int" value="$(arg square_size)" />
+    
+    <!--Rosbag play rate-->
+    <arg name="play_rate" default="1" />
+    
+    <!--Debugging (launch each node in its own terminal)-->
+    <arg name="debug" default="false" />
+    
+    <!--Run rviz visualization-->
+    <arg name="rviz" default="false" />
     
     <!--Enable simulation time-->
     <param name="use_sim_time" value="true"/>
     
     <!--Start CNN node for object recognition-->
-    <node pkg="desktop_object_detection" type="CNN.py" name="CNN" args="$(arg model_path)" >
-        <param name="predict_percent" type="double" value="$(arg predict_percent)" />
-    </node>
+    <group if="$(arg debug)" >
+        <node pkg="desktop_object_detection" type="CNN.py" name="CNN" args="$(arg model_path)" output="screen" launch-prefix="xterm -e" />
+    </group>
+    <group unless="$(arg debug)" >
+        <node pkg="desktop_object_detection" type="CNN.py" name="CNN" args="$(arg model_path)" />
+    </group>
     
     <!--Start synchronization nodelet-->
     <node pkg="nodelet" type="nodelet" name="rgbd_sync" args="standalone rtabmap_ros/rgbd_sync" output="screen">
@@ -37,23 +54,44 @@
     </node>
     
     <!--Start image segmentation node-->
-    <node pkg="desktop_object_detection" type="image_segmentation.py" name="image_segmentation" />
+    <group if="$(arg debug)" >
+        <node pkg="desktop_object_detection" type="image_segmentation.py" name="image_segmentation" output="screen" launch-prefix="xterm -e" />
+    </group>
+    <group unless="$(arg debug)" >
+        <node pkg="desktop_object_detection" type="image_segmentation.py" name="image_segmentation" />
+    </group>
     
     <!--Start Excel logger node-->
     <node pkg="desktop_object_detection" type="excel_logger.py" name="excel_logger" args="$(arg log_filepath)" />
     
-    <!--Run bag file-->
-    <group if="$(arg kinect_v1)" >
-        <node pkg="rosbag" type="play" name="player" output="screen" args="--clock $(arg filename)" launch-prefix="xterm -e" />
-    </group>
-    <group if="$(arg kinect_v2)" >
-        <node pkg="rosbag" type="play" name="player" output="screen" args="--clock $(arg filename)" launch-prefix="xterm -e" >
-            <remap from="/camera/hd/image_color_rect" to="/camera/rgb/image_rect_color" />
-            <remap from="/camera/hd/image_depth_rect" to="/camera/depth_registered/image_raw" />
-            <remap from="/camera/hd/camera_info" to="/camera/rgb/camera_info" />
-        </node>
+    <!--Start rviz-->
+    <group if="$(arg rviz)" >
+        <node pkg="rviz" type="rviz" name="rviz" args="-d $(find desktop_object_detection)/rviz/default.rviz" />
     </group>
     
-    <!--Start rviz-->
-    <node pkg="rviz" type="rviz" name="rviz" args="-d $(find desktop_object_detection)/rviz/default.rviz" />
+    <!--Run bag file-->
+    <group if="$(arg kinect_v1)" >
+        <group if="$(arg debug)" >
+            <node pkg="rosbag" type="play" name="player" output="screen" args="--clock $(arg filename) -r $(arg play_rate)" launch-prefix="xterm -e" />
+        </group>
+        <group unless="$(arg debug)" >
+            <node pkg="rosbag" type="play" name="player" output="screen" args="--clock $(arg filename) -r $(arg play_rate)" />
+        </group>
+    </group>
+    <group if="$(arg kinect_v2)" >
+        <group if="$(arg debug)" >
+            <node pkg="rosbag" type="play" name="player" output="screen" args="--clock $(arg filename) -r $(arg play_rate)" launch-prefix="xterm -e" >
+                <remap from="/camera/hd/image_color_rect" to="/camera/rgb/image_rect_color" />
+                <remap from="/camera/hd/image_depth_rect" to="/camera/depth_registered/image_raw" />
+                <remap from="/camera/hd/camera_info" to="/camera/rgb/camera_info" />
+            </node>
+        </group>
+        <group unless="$(arg debug)" >
+            <node pkg="rosbag" type="play" name="player" args="--clock $(arg filename) -r $(arg play_rate)" >
+                <remap from="/camera/hd/image_color_rect" to="/camera/rgb/image_rect_color" />
+                <remap from="/camera/hd/image_depth_rect" to="/camera/depth_registered/image_raw" />
+                <remap from="/camera/hd/camera_info" to="/camera/rgb/camera_info" />
+            </node>
+        </group>
+    </group>
 </launch>
