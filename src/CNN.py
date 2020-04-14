@@ -23,6 +23,9 @@ class Recognizer:
 		
 		# Previously recorded results
 		self.prevRecs = [[],[],[]]
+
+		# Get ROS parameter for prediction percentage
+		self.predict_percent = rospy.get_param("/predict_percent", 0.4)
 	def callback(self, data):
 		# Get original RGB image from data
 		original_image = self.bridge.imgmsg_to_cv2(data.original_image, desired_encoding="passthrough")
@@ -52,7 +55,7 @@ class Recognizer:
 				# Get tensorflow result class and put into output message if confidence greater than 80%
 				predictions = self.model.predict(x)
 				idx = np.argmax(predictions[0])
-				if predictions[0][idx] > 0.4:
+				if predictions[0][idx] > self.predict_percent:
 					output.className = self.CLASSES[idx]
 					self.prevRecs[idx] = self.prevRecs[idx] + [output.distance]
 
