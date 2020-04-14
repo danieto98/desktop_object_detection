@@ -210,3 +210,22 @@ To run all the nodes live (including the Kinect), use the following command by r
 ```
 roslaunch desktop_object_detection object_detect.launch log_filepath:=<log_path> model_path:=<model_dir> kinect_v1:=<using_v1>
 ```
+
+Other optional parameters include:
+
+- predict_percent:
+    - Minimum percentage of detection a certain class must have in order to be logged as recognized. Must be from 0 to 1.
+    - Type: float
+    - Default: 0.4
+- square_size:
+    - Minimum size of segmented regions of images accepted for recognition (in pixels).
+    - Type: integer
+    - Default: 350
+- debug:
+    - Whether debugging messages should be printed to different xterm terminals for every node.
+    - Type: boolean
+    - Default: false
+- rviz:
+    - Whether rviz should be run to visualize the data being captured by the Kinect.
+    - Type: boolean
+    - Default: false
