@@ -179,19 +179,24 @@ roslaunch desktop_object_detection run_bag.launch log_filepath:=<log_path> filen
 Other optional parameters include:
 
 - predict_percent:
-    - Minimum percentage of detection a certain class must have in order to be logged as recognized
+    - Minimum percentage of detection a certain class must have in order to be logged as recognized. Must be from 0 to 1.
+    - Type: float
     - Default: 0.4
 - square_size:
-    - Minimum size of segmented regions of images accepted for recognition (in pixels)
+    - Minimum size of segmented regions of images accepted for recognition (in pixels).
+    - Type: integer
     - Default: 350
 - play_rate:
     - Rate at which the bag file must be played. Recommended from 0 to 1.
+    - Type: float
     - Default: 1
 - debug:
     - Whether debugging messages should be printed to different xterm terminals for every node.
+    - Type: boolean
     - Default: false
 - rviz:
     - Whether rviz should be run to visualize the recorded data being played back.
+    - Type: boolean
     - Default: false
 
 ### Run Project Live
