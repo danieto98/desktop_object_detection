@@ -99,9 +99,15 @@ class ImageSegmenter:
                 if corner_1[0] - pix_val >= 0 and corner_1[1] - pix_val >= 0:
                     corner_1 = [corner_1[0] - pix_val, corner_1[1] - pix_val]
                 if side_1_size > side_2_size:
-                    result_corner_2 = [int(boundRect[c][0]+boundRect[c][3]+pix_val),int(boundRect[c][1]+boundRect[c][3]+pix_val)]
+                    if int(boundRect[c][0]+boundRect[c][3]+pix_val) < cv_rgb_image.shape[0] and int(boundRect[c][1]+boundRect[c][3]+pix_val) < cv_rgb_image.shape[1]:
+                        result_corner_2 = [int(boundRect[c][0]+boundRect[c][3]+pix_val),int(boundRect[c][1]+boundRect[c][3]+pix_val)]
+                    else:
+                        result_corner_2 = [int(boundRect[c][0]+boundRect[c][3]),int(boundRect[c][1]+boundRect[c][3])]
                 else:
-                    result_corner_2 = [int(boundRect[c][0]+boundRect[c][2]+pix_val), int(boundRect[c][1]+boundRect[c][2]+pix_val)]
+                    if int(boundRect[c][0]+boundRect[c][2]+pix_val) < cv_rgb_image.shape[0] and int(boundRect[c][1]+boundRect[c][2]+pix_val) < cv_rgb_image.shape[1]:
+                        result_corner_2 = [int(boundRect[c][0]+boundRect[c][2]+pix_val), int(boundRect[c][1]+boundRect[c][2]+pix_val)]
+                    else:
+                        result_corner_2 = [int(boundRect[c][0]+boundRect[c][2]), int(boundRect[c][1]+boundRect[c][2])]
                 rospy.loginfo("Corner 1: [%d, %d]", corner_1[0], corner_1[1])
                 rospy.loginfo("Corner 2: [%d, %d]", result_corner_2[0], result_corner_2[1])
                 rospy.loginfo("Square size: %d", result_corner_2[0] - corner_1[0])
