@@ -55,7 +55,7 @@ class Recognizer:
 				# Get tensorflow result class and put into output message if confidence greater than 80%
 				predictions = self.model.predict(x)
 				idx = np.argmax(predictions[0])
-				print("Percent: %f" % (self.predict_percent))
+				rospy.loginfo("Predicted class: %s. Percentage: %f", self.CLASSES[idx], predictions[0][idx])
 				if predictions[0][idx] > self.predict_percent:
 					output.className = self.CLASSES[idx]
 					self.prevRecs[idx] = self.prevRecs[idx] + [output.distance]

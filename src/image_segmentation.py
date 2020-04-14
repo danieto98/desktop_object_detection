@@ -96,13 +96,17 @@ class ImageSegmenter:
                 side_1_size = sqrt(float(corner_1[1] - corner_2[1])*float(corner_1[1] - corner_2[1]) + float(corner_1[0] - corner_2[0])*float(corner_1[0] - corner_2[0]))
                 side_2_size = sqrt(float(corner_3[1] - corner_2[1])*float(corner_3[1] - corner_2[1]) + float(corner_3[0] - corner_2[0])*float(corner_3[0] - corner_2[0]))
                 result_corner_2 = [0, 0]
-                corner_1 = [corner_1[0] - pix_val, corner_1[1] - pix_val]
+                if corner_1[0] - pix_val >= 0 and corner_1[1] - pix_val >= 0:
+                    corner_1 = [corner_1[0] - pix_val, corner_1[1] - pix_val]
                 if side_1_size > side_2_size:
                     result_corner_2 = [int(boundRect[c][0]+boundRect[c][3]+pix_val),int(boundRect[c][1]+boundRect[c][3]+pix_val)]
                 else:
                     result_corner_2 = [int(boundRect[c][0]+boundRect[c][2]+pix_val), int(boundRect[c][1]+boundRect[c][2]+pix_val)]
-                if result_corner_2[0] - corner_1[0] > self.square_size and corner_1[0] > 0 and corner_1[1] > 0 and result_corner_2[0] > 0 and result_corner_2[1] > 0:
-                	print("Here")
+                rospy.loginfo("Corner 1: [%d, %d]", corner_1[0], corner_1[1])
+                rospy.loginfo("Corner 2: [%d, %d]", result_corner_2[0], result_corner_2[1])
+                rospy.loginfo("Square size: %d", result_corner_2[0] - corner_1[0])
+                if result_corner_2[0] - corner_1[0] > self.square_size and corner_1[0] >= 0 and corner_1[1] >= 0 and result_corner_2[0] >= 0 and result_corner_2[1] >= 0:
+                    rospy.loginfo("Region has been detected")
                     output_msg.bounding_rectangle_coords = output_msg.bounding_rectangle_coords + corner_1 + result_corner_2
                     contour_image = np.zeros((cv_rgb_image.shape[0], cv_rgb_image.shape[1]), np.uint8)
                     cv2.drawContours(contour_image, contours, c, [255], thickness=cv2.FILLED)
